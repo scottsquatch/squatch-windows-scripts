@@ -2,9 +2,6 @@
 [CmdletBinding()]
 param (
     [Parameter()]
-    [string]
-    $PSModuleDir = "$HOME\Documents\WindowsPowerShell\Modules",
-    [Parameter()]
     [string[]]
     $DuplicacyUtilArgs,
     [Parameter()]
@@ -32,7 +29,7 @@ else {
 }
 
 if ($?) {
-    InstallWindowsUpdates.ps1 -moduleDir "$PSModuleDir"
+    InstallWindowsUpdates.ps1 
 }
 else {
     exit 1;

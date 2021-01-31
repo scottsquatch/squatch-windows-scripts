@@ -1,10 +1,3 @@
-[CmdletBinding()]
-param (
-    [Parameter()]
-    [string]
-    $moduleDir = "$HOME\Documents\WindowsPowerShell\Modules"
-)
-
 function log {
     param (
         [string]
@@ -16,26 +9,10 @@ function log {
     Write-Host ""
 }
 
-function ensureModuleDirExists {
-    if (!(Test-Path "$moduleDir")) {
-        log -msg "Module Directory does not exist, creating"
-        New-Item -Path "$moduleDir" -ItemType Directory
-        log -msg "Module Directory created"
-    }
-}
-
 function installUpdateScriptIfNeeded {
-    param (
-        [string]
-        $path
-    )
-    if (!(Test-Path "$path\PSWindowsUpdate")) {
+    if (!(Get-Module -ListAvailable -Name PSWindowsUpdate)) {
         log -msg "PSWindowsUpdate is not installed, starting install"
-        $zipPath = "$path\PSWindowsUpdate.zip";
-        Invoke-WebRequest -Uri "https://gallery.technet.microsoft.com/scriptcenter/2d191bcd-3308-4edd-9de2-88dff796b0bc/file/41459/47/PSWindowsUpdate.zip" -OutFile $zipPath 
-        Expand-Archive -LiteralPath $zipPath -DestinationPath $path
-        Remove-Item -Path $zipPath
-        Import-Module PSWindowsUpdate
+        Install-Module -Name PSWindowsUpdate
         log -msg "PSWindowsUpdate has been installed"
     }
 }
@@ -44,8 +21,7 @@ Write-Host "#####################"
 Write-Host "Windows Update Script"
 Write-Host "#####################"
 
-ensureModuleDirExists
-installUpdateScriptIfNeeded -path "$moduleDir"
+installUpdateScriptIfNeeded 
 
 log -msg "Checking for Updates"
 $updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0" # Scan for updates
