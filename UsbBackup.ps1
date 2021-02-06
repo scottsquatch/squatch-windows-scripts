@@ -15,36 +15,6 @@ param (
     $RobocopyDestinationFolders
 )
 
-function DuplicacyBackup {
-    param (
-        [string[]]
-        $cmd_args,
-        [string]
-        $duplicacy_util_path
-    )
-    Write-Output "###############################"
-    Write-Output "Start duplicacy backups"
-    Write-Output "###############################"
-    Write-Output ""
-    foreach ($cmd_arg in $cmd_args) {
-        Write-Output "Start backup for with command $cmd_arg"
-        $cmd = "$duplicacy_util_path $cmd_arg";
-        Invoke-Expression $cmd
-        if ($?) {
-            Write-Output "Great Success!";
-        }
-        else {
-            Write-Error "Backup failed please see console output";
-            exit 1;
-        }
-    }
-    
-    Write-Output "###############################"
-    Write-Output "End duplicacy backups"
-    Write-Output "###############################"
-    Write-Output ""
-}
-
 function RobocopyBackup {
     param (
         [string[]]
@@ -73,7 +43,7 @@ function RobocopyBackup {
 }
 
 if ($DuplicacyUtilArgs.Length -gt 0) {
-    DuplicacyBackup -cmd_args $DuplicacyUtilArgs -duplicacy_util_path $DuplicacyUtilPath 
+    DuplicacyUtilBackups.ps1 -DuplicacyUtilArgs $DuplicacyUtilArgs -DuplicacyUtilPath $DuplicacyUtilPath 
 }
 else {
     Write-Output "Duplicacy backup commands were empty, skipping"
