@@ -45,13 +45,13 @@ function DuplicacyBackup {
     Write-Output ""
 }
 
-function RobocoypBackup {
-    param {
+function RobocopyBackup {
+    param (
         [string[]]
         $arSourceFolders,
         [string[]]
         $arDestinationFolders
-    }
+    )
     # Section taken from https://gist.github.com/frndlyy/e7e51d3acddee51c4e42d0ee9bbe0dc0#file-filefolder_robocopy_withpowershell-ps1 and modified
     Write-Output "###############################"
     Write-Output "Start robocopy backup"
@@ -59,8 +59,10 @@ function RobocoypBackup {
     Write-Output ""
 
     for ($i = 0; $i -lt $arSourceFolders.Length; $i++) {
-        Write-Output "Process " $arSourceFolders[$i] " -> " $arDestinationFolders[$i] ;
-        robocopy $arSourceFolders[$i] $arDestinationFolders[$i] /COPYALL /E /R:0 /xo
+        $src = $arSourceFolders[$i]
+        $dst = $arDestinationFolders[$i]
+        Write-Output "Copy $src to $dst" ;
+        robocopy $src $dst /COPYALL /E /R:0 /xo
         Write-Output "Great Success!";
     }
 
@@ -81,8 +83,8 @@ if ($RobocopySourceFolders.Length -ne $RobocopyDestinationFolders.Length) {
     Write-Error "Source robocopy folders length does not match Destination robocopy folders length"
     exit 1;
 }
-elseif ($arSourceFolders.Length -gt 0) {
-    RobocoypBackup -arSourceFolders $RobocopySourceFolders -arDestFolders $RobocopyDestinationFolders
+elseif ($RobocopySourceFolders.Length -gt 0) {
+    RobocopyBackup -arSourceFolders $RobocopySourceFolders -arDestinationFolders $RobocopyDestinationFolders
 }
 else {
     Write-Output "Robocopy folders are empty, skipping robocopy backup"
