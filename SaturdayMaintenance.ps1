@@ -12,7 +12,10 @@ param (
     $RobocopySourceFolders,
     [Parameter()]
     [string[]]
-    $RobocopyDestinationFolders
+    $RobocopyDestinationFolders,
+    [Parameter()]
+    [bool]
+    $InstallWindowsUpdates = $false
 )
 
 Write-Host "#####################"
@@ -28,7 +31,7 @@ else {
     exit 1;
 }
 
-if ($?) {
+if ($? -and $InstallWindowsUpdates) {
     InstallWindowsUpdates.ps1 
 }
 else {
